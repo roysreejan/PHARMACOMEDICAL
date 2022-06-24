@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DoctorsController;
+use App\Http\Controllers\PagesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//----------------------------Login&Registration----------------------------//
+Route::get('/login', [PagesController::class, 'login']);
+Route::post('/login', [PagesController::class, 'loginSubmit'])->name('login');
+Route::get('/logout', [PagesController::class, 'logout'])->name('logout');
+
+Route::get('/registration', [PagesController::class, 'registration'])->name('registration');
+Route::post('/registration', [PagesController::class, 'registrationSubmit'])->name('registration');
+
+//----------------------------Doctors----------------------------//
+Route::get('/doctors/homeDoctor', [DoctorsController::class, 'homeDoctor'])->name('homeDoctor')->middleware('ValidDoctors');
