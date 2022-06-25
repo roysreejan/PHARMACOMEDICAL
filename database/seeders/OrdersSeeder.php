@@ -16,8 +16,7 @@ class OrdersSeeder extends Seeder
     public function run()
     {
         DB::table('orders')->insert([
-            'orderID' => 1,
-            'userID' => 3,
+            'userID' => 4,
             'pharmaceuticalItemID' => 1,
             'totalAmount' => 100,
             'hasPaid' => true,

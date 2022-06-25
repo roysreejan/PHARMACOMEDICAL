@@ -36,6 +36,7 @@ class PagesController extends Controller
         }
         else if($user && $user->role == "doctor"){
             $request->session()->put('user', $user->name);
+            $request->session()->put('ID', $user->userID);
             return redirect()->route('homeDoctor');
         }
         else if($user && $user->role == "patient"){
@@ -86,5 +87,14 @@ class PagesController extends Controller
     public function logout(){
         session()->forget('user');
         return view('pages.login');
+    }
+
+
+
+    public function doctorFee()
+    {
+        $user_name = session()->get('user');
+        $user = Users::where('name', $user_name)->first();
+        return view('doctors.doctorfee')->with('user', $user);
     }
 }

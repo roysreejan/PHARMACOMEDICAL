@@ -16,9 +16,8 @@ class PrescriptionsSeeder extends Seeder
     public function run()
     {
         DB::table('prescriptions')->insert([
-            'prescriptionID' => 1,
-            'doctorID' => 1,
-            'userID' => 3,
+            'doctorID' => 2,
+            'userID' => 4,
             'pharmaceuticalItemID' => 1,
             'advice' => 'Take it as prescribed',
         ]);

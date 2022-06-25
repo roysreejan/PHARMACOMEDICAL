@@ -18,12 +18,11 @@ class UsersSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'userID' => 4,
-            'name' => 'Adi',
-            'email' => 'adi@gmail.com',
-            'phoneNumber' => '+880 1521-526630',
-            'password' => md5('456456'),
-            'dob'=>'1998-11-30',
+            'name' => 'Dip',
+            'email' => 'dip@gmail.com',
+            'phoneNumber' => '+880 1521-526631',
+            'password' => md5('456654'),
+            'dob'=>'1999-02-08',
             'gender'=> 'male',
             'role' => 'pharmacist',
             'verified'=> 'true',

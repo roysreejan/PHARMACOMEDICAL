@@ -62,7 +62,6 @@
                     <label for="role">Role</label>
                     <select name="role" id="role">
                         <option value="">Select Role</option>
-                        <option value="admin">Admin</option>
                         <option value="doctor">Doctor</option>
                         <option value="patient">Patient</option>
                         <option value="pharmacist">Pharmacist</option>

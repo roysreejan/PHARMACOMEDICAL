@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->foreign('userID')->references('userID')->on('users');
-            $table->foreign('doctorID')->references('doctorID')->on('doctors');
+            $table->foreign('doctorID')->references('userID')->on('users');
             $table->foreign('pharmaceuticalItemID')->references('pharmaceuticalItemID')->on('pharmaceutical_items');
         });
     }

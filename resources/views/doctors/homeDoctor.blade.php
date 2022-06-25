@@ -1,4 +1,6 @@
 @extends('layouts.appDoctors')
 @section('contentDoctors')
-    <h1>Welcome to the Doctor Home page</h1>
+    @if(Session::get('user')) {{Session::get('ID')}}
+    <h1>Welcome {{Session::get('user')}}  Doctor</h1>
+ @endif
 @endsection

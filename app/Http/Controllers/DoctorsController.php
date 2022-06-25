@@ -6,6 +6,8 @@ use App\Models\Doctors;
 use App\Models\Users;
 use App\Http\Requests\StoreDoctorsRequest;
 use App\Http\Requests\UpdateDoctorsRequest;
+use Illuminate\Http\Request;
+use Session;
 
 class DoctorsController extends Controller
 {
@@ -84,44 +86,26 @@ class DoctorsController extends Controller
     {
         //
     }
-    //.........................Registration.........................//
-    public function registration(){
-        return view('pages.registration');
-    }
-
-    public function registrationSubmit(Request $request){
-        $validate = $request->validate([
-            'name' => 'required| min:3',
-            'email' => 'required',
-            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/',
-            'password' => 'required|min:6|confirmed',
-            'password_confirmation' => 'required|min:6|same:password',
-            'dob' => 'required',
-            'gender' => 'required',
-            'role' => 'required'
-        ],
-        ['name.required'=>"Please put you name here",
-        'name.min'=>"Name must be at least 3 characters long"],
-    );
-        $user = new Users();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phoneNumber = $request->phone;
-        $user->password = md5($request->password);
-        $user->dob = $request->dob;
-        $user->gender = $request->gender;
-        $user->role = "doctor";
-        $user->save();
-        
-        return view('pages.login');
-    }
     public function homeDoctor(){
         return view('doctors.homeDoctor');
     }
-    public function docotrdash(){
-        return view('doctors.homeDoctor');
+    public function doctorFee()
+    {
+        return view('doctors.doctorFee');
     }
-    public function profileAdminSubmit(Request $request){
+    public function doctorFeeSubmit(Request $request)
+    {
+        $validate = $request->validate([
+            'doctor_fee' => 'required|numeric',
+        ]);
+        //insert fee in doctor table
+        $doctor = new Doctors();
+        $doctor->userID = Session::get('ID');
+        $doctor->fee = $request->doctor_fee;
+        $doctor->save();
+        return redirect()->route('homeDoctor');
+    }
+    /*public function profileDoctorSubmit(Request $request){
         $user = Users::where('name', $request->name)->where('role', 'doctor')->first();
 
         $user->name = $request->name;
@@ -132,7 +116,7 @@ class DoctorsController extends Controller
         $user->role = 'doctor';
         $user->save();
         return redirect()->route('homeDoctor');
-    }
+    }*/
     public function logout(){
         session()->forget('user');
         return view('pages.login');

@@ -13,21 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('appointments', function (Blueprint $table) {
-            $table->increments('appID');
+        Schema::create('doctor_reviews', function (Blueprint $table) {
+            $table->increments('doctorReviewID');
             $table->integer('userID')->unsigned();
             $table->integer('doctorID')->unsigned();
-            $table->datetime('appointmentDate&Time');
-            $table->string('purpose');
-            $table->string('visited');
-            $table->string('hasPaid');
-            $table->datetime('paidDate&Time');
-            $table->string('appointmentStatus');
-            $table->string('link');
+            $table->string('point');
+            $table->string('description');
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->foreign('userID')->references('userID')->on('users');
-            $table->foreign('doctorID')->references('doctorID')->on('doctors');
+            $table->foreign('doctorID')->references('userID')->on('users');
         });
     }
 
@@ -38,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('appointments');
+        Schema::dropIfExists('doctor_reviews');
     }
 };

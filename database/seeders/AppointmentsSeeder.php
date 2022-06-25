@@ -16,9 +16,8 @@ class AppointmentsSeeder extends Seeder
     public function run()
     {
         DB::table('appointments')->insert([
-            'appID' => 1,
-            'userID' => 3,
-            'doctorID' => 1,
+            'userID' => 4,
+            'doctorID' => 2,
             'appointmentDate&Time' => '2020-06-21 11:00:00',
             'purpose' => 'test',
             'visited' => 'true',
