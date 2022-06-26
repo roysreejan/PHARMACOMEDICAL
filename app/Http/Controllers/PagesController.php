@@ -5,7 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Doctors;
 use App\Models\Users;
+use App\Models\User;
 use Illuminate\Support\Facades\Cookie;
+use Auth;
+use Exception;
+use Socialite;
+use Validator;
+
 
 class PagesController extends Controller
 {
@@ -51,6 +57,71 @@ class PagesController extends Controller
             return "User name and Password do not match";
         }
     }
+    //Facebook Login
+    public function facebookRedirect(){
+        return Socialite::driver('facebook')->redirect();
+    }
+    public function loginWithFacebook(){
+        try {
+            $user = Socialite::driver('facebook')->user();
+            $isUser = Users::where('fb_id', $user->id)->first();
+            if($isUser){
+                Auth::login($isUser);
+                $request->session()->put('user', $isUser->name);
+                $request->session()->put('ID', $isUser->userID);
+                return redirect()->route('homeDoctor');
+            }
+            else{
+                $newUser = new Users();
+                $newUser->name = $user->name;
+                $newUser->email = $user->email;
+                $newUser->fb_id = $user->id;
+                $newUser->password = md5(12345678);
+                $newUser->role = "doctor";
+                $newUser->save();
+                $request->session()->put('user', $newUser->name);
+                $request->session()->put('ID', $newUser->userID);
+
+                Auth::login($newUser);
+                return redirect()->route('homeDoctor');
+            }
+        } catch (Exception $e) {
+            dd($e->getMessage());
+        }
+    }
+
+    //google Login
+    public function googleRedirect(){
+        return Socialite::driver('google')->redirect();
+    }
+    public function loginWithGoogle(){
+        try {
+            $user = Socialite::driver('google')->user();
+            $isUser = Users::where('google_id', $user->id)->first();
+            if($isUser){
+                Auth::login($isUser);
+                $request->session()->put('user', $isUser->name);
+                $request->session()->put('ID', $isUser->userID);
+                return redirect()->route('homeDoctor');
+            }
+            else{
+                $newUser = new Users();
+                $newUser->name = $user->name;
+                $newUser->email = $user->email;
+                $newUser->google_id = $user->id;
+                $newUser->password = md5(12345678);
+                $newUser->role = "doctor";
+                $newUser->save();
+                $request->session()->put('user', $newUser->name);
+                $request->session()->put('ID', $newUser->userID);
+
+                Auth::login($newUser);
+                return redirect()->route('homeDoctor');
+            }
+        } catch (Exception $e) {
+            dd($e->getMessage());
+        }
+    }
 
     //.........................Registration.........................//
     public function registration(){
@@ -87,14 +158,5 @@ class PagesController extends Controller
     public function logout(){
         session()->forget('user');
         return view('pages.login');
-    }
-
-
-
-    public function doctorFee()
-    {
-        $user_name = session()->get('user');
-        $user = Users::where('name', $user_name)->first();
-        return view('doctors.doctorfee')->with('user', $user);
     }
 }

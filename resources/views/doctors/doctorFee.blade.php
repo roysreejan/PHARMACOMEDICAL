@@ -1,7 +1,7 @@
 @extends('layouts.appDoctors')
 @section('contentDoctors')
-<div class = "container">
-    <br><br>
+<div class="container" style="width:500px;">  
+    <br>
     <h1>Add your Fee</h1>
     <form action="{{route('doctorFee')}}" method="POST">
         {{csrf_field()}}

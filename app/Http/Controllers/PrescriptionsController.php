@@ -10,6 +10,7 @@ use App\Http\Requests\UpdatePrescriptionsRequest;
 use Illuminate\Http\Request;
 use Session;
 use DB;
+use PDF;
 
 
 class PrescriptionsController extends Controller
@@ -92,13 +93,24 @@ class PrescriptionsController extends Controller
     public function prescriptions()
     {
         $pharmaceuticalItems = DB::table('pharmaceutical_items')->get();
-        $appointments = DB::table('appointments')->where('doctorID', Session::get('ID'))->get();
-        return view('doctors.prescriptions')->with('pharmaceuticalItems', $pharmaceuticalItems)->with('appointments', $appointments);
+        $appointments = DB::table('appointments')->leftJoin('users', 'appointments.userID', '=', 'users.userID')->where('appointments.doctorID', '=', Session::get('ID'))->where('hasPaid', '=', 'true');
+        $app = $appointments->select([
+            'users.name',
+            'users.userID',
+        ])->get();
+        return view('doctors.prescriptions')->with('pharmaceuticalItems', $pharmaceuticalItems)->with('appointments', $app);
     }
     public function prescriptionsSubmit(Request $request)
     {
         $validate = $request->validate([
+            'patientID' => 'required',
+            'pharmaceuticalItemID' => 'required',
             'advice' => 'required',
+        ],
+        [
+            'patientID.required' => 'Please select a patient',
+            'pharmaceuticalItemID.required' => 'Please select a pharmaceutical item',
+            'advice.required' => 'Please enter advice',
         ]);
 
         $prescriptions = new Prescriptions();
@@ -108,5 +120,12 @@ class PrescriptionsController extends Controller
         $prescriptions->advice = $request->advice;
         $prescriptions->save();
         return redirect()->route('homeDoctor');
+    }
+
+    //prescritions list
+    public function prescriptionsList()
+    {
+        $prescriptions = Prescriptions::where('doctorID', Session::get('ID'))->get();
+        return view('doctors.prescriptionsList')->with('prescriptions', $prescriptions);
     }
 }

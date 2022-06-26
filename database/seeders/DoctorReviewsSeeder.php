@@ -16,9 +16,8 @@ class DoctorReviewsSeeder extends Seeder
     public function run()
     {
         DB::table('doctor_reviews')->insert([
-            'doctorReviewID' => 1,
-            'doctorID' => 1,
-            'userID' => 3,
+            'doctorID' => 2,
+            'userID' => 4,
             'point' => 4.5,
             'description' => 'Good doctor',
         ]);

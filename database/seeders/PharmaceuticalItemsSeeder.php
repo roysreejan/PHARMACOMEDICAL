@@ -17,8 +17,8 @@ class PharmaceuticalItemsSeeder extends Seeder
     {
         DB::table('pharmaceutical_items')->insert([
             'userID'=> 6,
-            'itemName' => 'Paracetamol',
-            'price' => 100,
+            'itemName' => 'Antibiotic ointment',
+            'price' => 80,
         ]);
     }
 }

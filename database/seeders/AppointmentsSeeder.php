@@ -16,13 +16,13 @@ class AppointmentsSeeder extends Seeder
     public function run()
     {
         DB::table('appointments')->insert([
-            'userID' => 4,
+            'userID' => 10,
             'doctorID' => 2,
-            'appointmentDate&Time' => '2020-06-21 11:00:00',
+            'appointmentDate&Time' => '2020-08-21 11:00:00',
             'purpose' => 'test',
             'visited' => 'true',
             'hasPaid' => 'true',
-            'paidDate&Time' => '2020-06-21 10:00:00',
+            'paidDate&Time' => '2020-08-21 10:00:00',
             'appointmentStatus' => 'true',
             'link' => 'https://meet.google.com/nvg-fcfc-dzp',
         ]);

@@ -1,18 +1,21 @@
 @extends('layouts.appDoctors')
 @section('contentDoctors')
-<div class = "container">
-    <br><br>
+<div class="container" style="width:500px;">  
+    <br>
     <h1>Prescriptions</h1>
     <form action="{{route('prescriptions')}}" method="POST">
         {{csrf_field()}}
         <div class="form-group">
-        <label for="pharmaceuticalItemID">Patient ID</label>
-        <select name="pharmaceuticalItemID" id="pharmaceuticalItemID">
-            <option value="" selected>Select Item</option>
+        <label for="patientID">Patient ID</label>
+        <select name="patientID" id="patientID">
+            <option value="" selected>Select Patient</option>
             @foreach($appointments as $appointment)
-                <option value="{{$appointment->doctorID}}">{{$appointment->doctorID}}</option>
+                <option value="{{$appointment->userID}}">{{$appointment->name}}({{$appointment->userID}})</option>
             @endforeach
             </select>
+            @error('patientID')
+                <span class="text-danger">{{$message}}</span>
+            @enderror
         </div>
         <div class="form-group">
         <label for="pharmaceuticalItemID">Pharmaceutical Item ID</label>
@@ -22,6 +25,8 @@
                 <option value="{{$pharmaceuticalItem->pharmaceuticalItemID}}">{{$pharmaceuticalItem->itemName}}({{$pharmaceuticalItem->pharmaceuticalItemID}})</option>
             @endforeach
             </select>
+                <button type="submit" class="btn btn-primary">Add</button>
+                <input type="text" name="addeditem" id="addeditem" placeholder="Added Item"></input>
             @error('pharmaceuticalItemID')
                 <span class="text-danger">{{$message}}</span>
             @enderror

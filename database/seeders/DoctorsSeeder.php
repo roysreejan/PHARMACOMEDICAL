@@ -18,7 +18,6 @@ class DoctorsSeeder extends Seeder
     public function run()
     {
         DB::table('doctors')->insert([
-            'doctorID' => 1,
             'userID' => 2,
             'fee' => 1000,
             'rating' => 4.5,

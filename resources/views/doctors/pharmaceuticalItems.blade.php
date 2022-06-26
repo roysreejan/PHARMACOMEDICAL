@@ -1,7 +1,7 @@
 @extends('layouts.appDoctors')
 @section('contentDoctors')
-<div class = "container">
-    <br><br>
+<div class="container" style="width:500px;">  
+    <br>
     <h1>Pharmaceutical Items</h1>
     <form action="{{route('pharmaceuticalItems')}}" method="POST">
         {{csrf_field()}}
