@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Session;
 use DB;
 use PDF;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 
 class PrescriptionsController extends Controller
@@ -20,6 +21,7 @@ class PrescriptionsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // $items = array();
     public function index()
     {
         //
@@ -90,42 +92,154 @@ class PrescriptionsController extends Controller
     {
         //
     }
-    public function prescriptions()
+
+    public function prescriptions(Request $request)
     {
-        $pharmaceuticalItems = DB::table('pharmaceutical_items')->get();
-        $appointments = DB::table('appointments')->leftJoin('users', 'appointments.userID', '=', 'users.userID')->where('appointments.doctorID', '=', Session::get('ID'))->where('hasPaid', '=', 'true');
-        $app = $appointments->select([
+        if ($request->isMethod('get')) {
+            $appointments = DB::table('appointments')->leftJoin('users', 'appointments.userID', '=', 'users.userID')->where('appointments.doctorID', '=', Session::get('ID'))->where('appointments.hasPaid', '=', 'true');
+            $app = $appointments->select([
+                'users.name',
+                'users.userID',
+                'appointments.appID',
+            ])->get();
+            return view('doctors.prescriptions')->with('appointments', $app);
+        }
+        if ($request->isMethod('post')) {
+            $validate = $request->validate([
+                'patientID' => 'required',
+            ],
+            [
+                'patientID.required' => 'Please select a patient',
+            ]);
+            $str_arr = explode ("/", $request->patientID); 
+            $checkprecription = DB::table('prescriptions')->where('appID', '=', $str_arr[0])->get();
+            if (count($checkprecription) > 0) {
+                $request->session()->put('appID', $str_arr[0]);
+                return redirect()->route('prescription');
+            }
+            $prescriptions = new Prescriptions();
+            $prescriptions->appID =  $str_arr[0];
+            $prescriptions->userID =  $str_arr[1];
+            $prescriptions->doctorID = Session::get('ID');
+            $prescriptions->save();
+            $request->session()->put('appID', $str_arr[0]);
+            return redirect()->route('prescription');
+        }
+    }
+    public function prescription(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            $pharmaceuticalItems = DB::table('pharmaceutical_items')->get();
+            $prescription = DB::table('prescriptions')->where('appID', '=', Session::get('appID'))->get();
+
+            return view('doctors.prescription')->with('pharmaceuticalItems', $pharmaceuticalItems)->with('prescription', $prescription);
+        }
+        if ($request->isMethod('post')) {
+            $validate = $request->validate([
+                'pharmaceuticalItemsName' => 'required',
+                'advice' => 'required',
+            ],
+            [
+                'pharmaceuticalItemsName.required' => 'Please select a pharmaceutical item Name',
+                'advice.required' => 'Please enter advice',
+            ]);
+            $prescription = DB::table('prescriptions')->where('prescriptions.doctorID', '=', Session::get('ID'))->where('prescriptions.appID', '=', Session::get('appID'));
+            $prescriptionItems = $prescription->select([
+                'pharmaceuticalItemsName',
+            ])->get();
+            if(empty($prescriptionItems)) {
+                $prescription->update([
+                    'pharmaceuticalItemsName' => $request->pharmaceuticalItemsName,
+                    'advice' => $request->advice,
+                ]);
+            }
+            else {
+                $store1 = '';
+                foreach ($prescriptionItems as $prescriptionItem){
+                    $store1 =  $prescriptionItem->pharmaceuticalItemsName;
+                }
+                if($store1 == ''){
+                    $prescription->update([
+                        'pharmaceuticalItemsName' => $request->pharmaceuticalItemsName,
+                        'advice' => $request->advice,
+                    ]);
+                }
+                else {
+                    $store2 = explode(",", $store1);
+                    foreach ($store2 as $store3){
+                        if($store3 == $request->pharmaceuticalItemsName){
+                            $request->session()->flash('error', 'Pharmaceutical Item already added');
+                            return redirect()->route('prescription');
+                        }
+                    }
+                    $prescription->update([
+                        'pharmaceuticalItemsName' => $store1 . "," . $request->pharmaceuticalItemsName,
+                        'advice' => $request->advice,
+                    ]);
+                }
+            }
+            return redirect()->route('prescription');
+        }
+    }
+
+    public function downloadPrescription()
+    {
+        $prescription = DB::table('prescriptions')->leftJoin('users', 'prescriptions.userID', '=', 'users.userID')->where('prescriptions.doctorID', '=', Session::get('ID'))->where('prescriptions.appID', '=', Session::get('appID'));
+        $pres = $prescription->select([
             'users.name',
             'users.userID',
+            'users.gender',
+            'prescriptions.prescriptionID',
+            'prescriptions.appID',
+            'prescriptions.doctorID',
+            'prescriptions.pharmaceuticalItemsName',
+            'prescriptions.advice',
         ])->get();
-        return view('doctors.prescriptions')->with('pharmaceuticalItems', $pharmaceuticalItems)->with('appointments', $app);
+        $medicinelists = $prescription->select([
+            'prescriptions.pharmaceuticalItemsName',
+        ])->get();
+        $store5 = '';
+        foreach ($medicinelists as $medicinelist){
+            $store5 =  $medicinelist->pharmaceuticalItemsName;
+        }
+        $store6 = explode(",", $store5);
+        $doctor = DB::table('users')->where('userID', '=', Session::get('ID'));
+        $doctorName = $doctor->select([
+            'name',
+        ])->get();
+        return view('doctors.downloadPrescription')->with('prescription', $pres)->with('doctorName', $doctorName)->with('medicinelists', $store6);
     }
-    public function prescriptionsSubmit(Request $request)
-    {
-        $validate = $request->validate([
-            'patientID' => 'required',
-            'pharmaceuticalItemID' => 'required',
-            'advice' => 'required',
-        ],
-        [
-            'patientID.required' => 'Please select a patient',
-            'pharmaceuticalItemID.required' => 'Please select a pharmaceutical item',
-            'advice.required' => 'Please enter advice',
-        ]);
-
-        $prescriptions = new Prescriptions();
-        $prescriptions->userID = Session::get('ID');
-        $prescriptions->doctorID = Session::get('ID');
-        $prescriptions->pharmaceuticalItemID = Session::get('ID');
-        $prescriptions->advice = $request->advice;
-        $prescriptions->save();
-        return redirect()->route('homeDoctor');
-    }
-
     //prescritions list
-    public function prescriptionsList()
+    // public function prescriptionsList()
+    // {
+    //     $prescriptions = Prescriptions::where('doctorID', Session::get('ID'))->paginate(3);
+    //     return view('doctors.prescriptionsList')->with('prescriptions', $prescriptions);
+    // }
+    // public function searchPrescriptionsList(Request $request)
+    // {
+    //     $search = $request->search;
+    //     $posts = DB::table('prescriptions')->where('pharmaceuticalItemsName', 'like', '%' . $search . '%')->get();
+    //     return view('doctors.prescriptionsList')->with('prescriptions1', $posts);
+    // }
+    public function prescriptionsList(Request $request)
     {
-        $prescriptions = Prescriptions::where('doctorID', Session::get('ID'))->get();
-        return view('doctors.prescriptionsList')->with('prescriptions', $prescriptions);
+        if ($request->isMethod('get')) {
+            if(Session::has('search')){
+                $posts = DB::table('prescriptions')->where('prescriptionID', 'like', '%' . Session::get('search') . '%')
+                ->orWhere('appID', 'like', '%' . Session::get('search') . '%')
+                ->orWhere('userID', 'like', '%' . Session::get('search') . '%')->paginate(3);
+                session()->forget('search');
+                return view('doctors.prescriptionsList')->with('prescriptions', $posts);
+            }
+            else{
+                $prescriptions = Prescriptions::where('doctorID', Session::get('ID'))->paginate(3);
+                return view('doctors.prescriptionsList')->with('prescriptions', $prescriptions);
+            }
+        }
+        if ($request->isMethod('post')) {
+            $search = $request->search;
+            $request->session()->put('search', "$request->search");
+            return redirect()->route('prescriptionsList');
+        }
     }
 }

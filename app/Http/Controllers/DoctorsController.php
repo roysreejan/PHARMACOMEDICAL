@@ -8,6 +8,7 @@ use App\Http\Requests\StoreDoctorsRequest;
 use App\Http\Requests\UpdateDoctorsRequest;
 use Illuminate\Http\Request;
 use Session;
+use DB;
 
 class DoctorsController extends Controller
 {
@@ -103,7 +104,30 @@ class DoctorsController extends Controller
         $doctor->userID = Session::get('ID');
         $doctor->fee = $request->doctor_fee;
         $doctor->save();
-        return redirect()->route('homeDoctor');
+        return redirect()->route('doctorFee');
+    }
+    public function doctorAppointments()
+    {
+        $appointments = DB::table('appointments')->leftJoin('users', 'appointments.userID', '=', 'users.userID')->where('appointments.doctorID', '=', Session::get('ID'))->where('appointments.hasPaid', '=', 'true');
+        $app = $appointments->select([
+            'users.name',
+            'users.userID',
+        ])->get();
+        return view('doctors.doctorAppointments')->with('appointments', $app);
+    }
+    public function doctorAppointmentsSubmit(Request $request)
+    {
+        $validate = $request->validate([
+            'patientID' => 'required',
+            'appointmentStatus' => 'required',
+        ]);
+
+        //insert appointment in appointment tables
+        $appointments1 = DB::table('appointments')->where('appointments.doctorID', '=', Session::get('ID'))->where('appointments.userID', '=', $request->patientID);
+        $app1 = $appointments1->update([
+            'appointmentStatus' => $request->appointmentStatus,
+        ]);
+        return redirect()->route('doctorAppointments');
     }
     /*public function profileDoctorSubmit(Request $request){
         $user = Users::where('name', $request->name)->where('role', 'doctor')->first();

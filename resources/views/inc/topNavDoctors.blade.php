@@ -11,6 +11,9 @@
             <a class = "nav-link" href="{{route('doctorFee')}}"><b>Fee</b></a>
         </li>
         <li class="nav-item active">
+            <a class = "nav-link" href="{{route('doctorAppointments')}}"><b>Appointments</b></a>
+        </li>
+        <li class="nav-item active">
             <a class = "nav-link" href="{{route('prescriptions')}}"><b>Prescriptions</b></a>
         </li>
         <li class="nav-item active">

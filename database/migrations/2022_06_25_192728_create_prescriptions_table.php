@@ -17,13 +17,14 @@ return new class extends Migration
             $table->increments('prescriptionID');
             $table->integer('userID')->unsigned();
             $table->integer('doctorID')->unsigned();
-            $table->integer('pharmaceuticalItemID')->unsigned();
+            $table->integer('appID')->unsigned()->unique();
+            $table->string('pharmaceuticalItemsName');
             $table->string('advice');
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->foreign('userID')->references('userID')->on('users');
             $table->foreign('doctorID')->references('userID')->on('users');
-            $table->foreign('pharmaceuticalItemID')->references('pharmaceuticalItemID')->on('pharmaceutical_items');
+            $table->foreign('appID')->references('appID')->on('appointments');
         });
     }
 

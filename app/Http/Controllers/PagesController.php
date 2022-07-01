@@ -15,6 +15,10 @@ use Validator;
 
 class PagesController extends Controller
 {
+    public function home()
+    {
+        return view('home');
+    }
     //----------------------------Login----------------------------//
     public function login(){
         return view('pages.login');
@@ -35,26 +39,32 @@ class PagesController extends Controller
         $user = Users::where('email', $request->email)
             ->where('password', md5($request->password))
             ->first();
-
-        if($user && $user->role == "admin"){
-            $request->session()->put('user', $user->name);
-            return redirect()->route('homeAdmin');
-        }
-        else if($user && $user->role == "doctor"){
-            $request->session()->put('user', $user->name);
-            $request->session()->put('ID', $user->userID);
-            return redirect()->route('homeDoctor');
-        }
-        else if($user && $user->role == "patient"){
-            $request->session()->put('user', $user->name);
-            return redirect()->route('homePatient');
-        }
-        elseif($user && $user->role == "pharmacist"){
-            $request->session()->put('user', $user->name);
-            return redirect()->route('homePharmacist');
+        if($user){
+            if($user->verified == "true"){
+                if($user && $user->role == "admin"){
+                    $request->session()->put('user', $user->name);
+                    return redirect()->route('homeAdmin');
+                }
+                else if($user && $user->role == "doctor"){
+                    $request->session()->put('user', $user->name);
+                    $request->session()->put('ID', $user->userID);
+                    return redirect()->route('homeDoctor');
+                }
+                else if($user && $user->role == "patient"){
+                    $request->session()->put('user', $user->name);
+                    return redirect()->route('homePatient');
+                }
+                else if($user && $user->role == "pharmacist"){
+                    $request->session()->put('user', $user->name);
+                    return redirect()->route('homePharmacist');
+                }
+            }
+            else{
+                return redirect()->route('login')->with('error', 'Your account is not verified.');
+            }
         }
         else{
-            return "User name and Password do not match";
+            return redirect()->route('login')->with('error1', 'Invalid email or password');
         }
     }
     //Facebook Login
