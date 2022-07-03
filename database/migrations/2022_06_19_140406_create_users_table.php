@@ -22,7 +22,7 @@ return new class extends Migration
             $table->date('dob');
             $table->string('gender');
             $table->string('role');
-            $table->string('verified');
+            $table->string('verified')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
         });

@@ -7,6 +7,9 @@
         <li class="nav-item active">
             <a class = "nav-link" href="{{route('homeDoctor')}}"><b>Home</b></a>
         </li>
+        <li class="nav-item">
+            <a class = "nav-link" href="{{route('profileDoctor')}}"><b>Profile</b></a>
+        </li>
         <li class="nav-item active">
             <a class = "nav-link" href="{{route('doctorFee')}}"><b>Fee</b></a>
         </li>

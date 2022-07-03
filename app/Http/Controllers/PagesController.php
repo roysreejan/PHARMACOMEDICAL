@@ -11,6 +11,7 @@ use Auth;
 use Exception;
 use Socialite;
 use Validator;
+use DB;
 
 
 class PagesController extends Controller

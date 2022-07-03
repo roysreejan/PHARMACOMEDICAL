@@ -88,7 +88,14 @@ class DoctorsController extends Controller
         //
     }
     public function homeDoctor(){
-        return view('doctors.homeDoctor');
+        $doctor_reviews1 = DB::table('doctor_reviews')->select('point', DB::raw('COUNT(point) as counter'))->where('doctorID' ,'=', Session::get('ID'))->where('point' ,'=', '1')->groupBy('point')->get();
+        $doctor_reviews2 = DB::table('doctor_reviews')->select('point', DB::raw('COUNT(point) as counter'))->where('doctorID' ,'=', Session::get('ID'))->where('point' ,'=', '2')->groupBy('point')->get();
+        $doctor_reviews3 = DB::table('doctor_reviews')->select('point', DB::raw('COUNT(point) as counter'))->where('doctorID' ,'=', Session::get('ID'))->where('point' ,'=', '3')->groupBy('point')->get();
+        $doctor_reviews4 = DB::table('doctor_reviews')->select('point', DB::raw('COUNT(point) as counter'))->where('doctorID' ,'=', Session::get('ID'))->where('point' ,'=', '4')->groupBy('point')->get();
+        $doctor_reviews5 = DB::table('doctor_reviews')->select('point', DB::raw('COUNT(point) as counter'))->where('doctorID' ,'=', Session::get('ID'))->where('point' ,'=', '5')->groupBy('point')->get();
+
+        return view('doctors.homeDoctor')->with('doctorreviews1', $doctor_reviews1)->with('doctorreviews2', $doctor_reviews2)
+        ->with('doctorreviews3', $doctor_reviews3)->with('doctorreviews4', $doctor_reviews4)->with('doctorreviews5', $doctor_reviews5);
     }
     public function doctorFee()
     {
@@ -129,8 +136,12 @@ class DoctorsController extends Controller
         ]);
         return redirect()->route('doctorAppointments');
     }
-    /*public function profileDoctorSubmit(Request $request){
-        $user = Users::where('name', $request->name)->where('role', 'doctor')->first();
+    public function profileDoctor(Request $request){
+        $doctor = Users::where('userID', '=', Session::get('ID'))->first();
+        return view('doctors.doctorProfile')->with('doctor', $doctor);
+    }
+    public function profileDoctorSubmit(Request $request){
+        $user = Users::where('userID', '=', Session::get('ID'))->first();
 
         $user->name = $request->name;
         $user->email = $request->email;
@@ -140,7 +151,7 @@ class DoctorsController extends Controller
         $user->role = 'doctor';
         $user->save();
         return redirect()->route('homeDoctor');
-    }*/
+    }
     public function logout(){
         session()->forget('user');
         return view('pages.login');

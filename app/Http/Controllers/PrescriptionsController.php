@@ -10,7 +10,6 @@ use App\Http\Requests\UpdatePrescriptionsRequest;
 use Illuminate\Http\Request;
 use Session;
 use DB;
-use PDF;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 
@@ -21,7 +20,6 @@ class PrescriptionsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // $items = array();
     public function index()
     {
         //
@@ -209,18 +207,7 @@ class PrescriptionsController extends Controller
         ])->get();
         return view('doctors.downloadPrescription')->with('prescription', $pres)->with('doctorName', $doctorName)->with('medicinelists', $store6);
     }
-    //prescritions list
-    // public function prescriptionsList()
-    // {
-    //     $prescriptions = Prescriptions::where('doctorID', Session::get('ID'))->paginate(3);
-    //     return view('doctors.prescriptionsList')->with('prescriptions', $prescriptions);
-    // }
-    // public function searchPrescriptionsList(Request $request)
-    // {
-    //     $search = $request->search;
-    //     $posts = DB::table('prescriptions')->where('pharmaceuticalItemsName', 'like', '%' . $search . '%')->get();
-    //     return view('doctors.prescriptionsList')->with('prescriptions1', $posts);
-    // }
+
     public function prescriptionsList(Request $request)
     {
         if ($request->isMethod('get')) {

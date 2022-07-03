@@ -39,6 +39,8 @@ Route::post('/registration', [PagesController::class, 'registrationSubmit'])->na
 
 //----------------------------Doctors----------------------------//
 Route::get('/homeDoctor', [DoctorsController::class, 'homeDoctor'])->name('homeDoctor')->middleware('ValidDoctors');
+Route::get('doctorProfile', [DoctorsController::class, 'profileDoctor'])->name('profileDoctor')->middleware('ValidDoctors');
+Route::post('doctorProfile', [DoctorsController::class, 'profileDoctorSubmit'])->name('profileDoctorSubmit')->middleware('ValidDoctors');
 Route::get('/doctorFee', [DoctorsController::class, 'doctorFee'])->name('doctorFee')->middleware('ValidDoctors');
 Route::post('/doctorFee', [DoctorsController::class, 'doctorFeeSubmit'])->name('doctorFee')->middleware('ValidDoctors');
 Route::get('/doctorAppointments', [DoctorsController::class, 'doctorAppointments'])->name('doctorAppointments')->middleware('ValidDoctors');
@@ -46,12 +48,11 @@ Route::post('/doctorAppointments', [DoctorsController::class, 'doctorAppointment
 
 Route::get('/prescriptions', [PrescriptionsController::class, 'prescriptions'])->name('prescriptions')->middleware('ValidDoctors');
 Route::post('/prescriptions', [PrescriptionsController::class, 'prescriptions'])->name('prescriptions')->middleware('ValidDoctors');
+
 Route::get('/prescription', [PrescriptionsController::class, 'prescription'])->name('prescription')->middleware('ValidDoctors');
 Route::post('/prescription', [PrescriptionsController::class, 'prescription'])->name('prescription')->middleware('ValidDoctors');
+
 Route::get('/downloadPrescription', [PrescriptionsController::class, 'downloadPrescription'])->name('downloadPrescription')->middleware('ValidDoctors');
 
 Route::get('/prescriptionsList', [PrescriptionsController::class, 'prescriptionsList'])->name('prescriptionsList')->middleware('ValidDoctors');
 Route::post('/prescriptionsList', [PrescriptionsController:: class, 'prescriptionsList'])->name('prescriptionsList')->middleware('ValidDoctors');
-
-Route::get('/pharmaceuticalItems', [PharmaceuticalItemsController::class, 'pharmaceuticalItems'])->name('pharmaceuticalItems')->middleware('ValidDoctors');
-Route::post('/pharmaceuticalItems', [PharmaceuticalItemsController::class, 'pharmaceuticalItemsSubmit'])->name('pharmaceuticalItems')->middleware('ValidDoctors');

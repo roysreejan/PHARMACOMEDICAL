@@ -17,7 +17,7 @@ return new class extends Migration
             $table->increments('doctorID');
             $table->integer('userID')->unsigned();
             $table->double('fee');
-            $table->string('rating');
+            $table->string('rating')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->foreign('userID')->references('userID')->on('users');

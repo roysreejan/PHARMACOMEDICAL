@@ -2,7 +2,6 @@
 @section('contentDoctors')
 <div class="container" style="width:500px;">  
     <br>
-    {{Session::get('appID')}}
     <h1>Prescription</h1>
     <form action="{{route('prescription')}}" method="POST">
     {{csrf_field()}}
