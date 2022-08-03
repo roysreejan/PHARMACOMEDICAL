@@ -18,13 +18,43 @@ class UsersSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'name' => 'Sayom',
-            'email' => 'sayom@gmail.com',
-            'phoneNumber' => '+880 1521-526635',
-            'password' => md5('369789'),
+            'name' => 'Sreejan Roy',
+            'email' => 'sreejanroy@gmail.com',
+            'phoneNumber' => '+880 1521-526627',
+            'password' => md5('123456'),
+            'dob'=>'2000-02-08',
+            'gender'=> 'male',
+            'role' => 'admin',
+            'verified'=> 'true',
+        ]);
+        DB::table('users')->insert([
+            'name' => 'Sreejan',
+            'email' => 'sreejan@gmail.com',
+            'phoneNumber' => '+880 1521-526628',
+            'password' => md5('147741'),
+            'dob'=>'2000-02-08',
+            'gender'=> 'male',
+            'role' => 'doctor',
+            'verified'=> 'true',
+        ]);
+        DB::table('users')->insert([
+            'name' => 'Apurba',
+            'email' => 'apurba@gmail.com',
+            'phoneNumber' => '+880 1521-526629',
+            'password' => md5('123123'),
             'dob'=>'2000-02-08',
             'gender'=> 'male',
             'role' => 'patient',
+            'verified'=> 'true',
+        ]);
+        DB::table('users')->insert([
+            'name' => 'Shoumik',
+            'email' => 'shoumik@gmail.com',
+            'phoneNumber' => '+880 1521-526630',
+            'password' => md5('456456'),
+            'dob'=>'2000-02-08',
+            'gender'=> 'male',
+            'role' => 'pharmacist',
             'verified'=> 'true',
         ]);
     }

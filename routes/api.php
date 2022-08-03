@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginAPIController;
+use App\Http\Controllers\DoctorsAPIController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +19,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+//----------------------------Login & Logout----------------------------//
+Route::post('/login', [LoginAPIController::class, 'login']);
+Route::post('/logout', [LoginAPIController::class, 'logout']);
+
+//----------------------------Doctors----------------------------//
+Route::get('/doctorProfile', [DoctorsAPIController::class, 'doctorProfile'])->middleware('APIAuth');
