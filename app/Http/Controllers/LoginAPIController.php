@@ -34,4 +34,16 @@ class LoginAPIController extends Controller
             return "Logout";
         }
     }
+    public function registration(Request $request){
+        $user = new Users();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phoneNumber = $request->phoneNumber;
+        $user->password = md5($request->password);
+        $user->dob = $request->dob;
+        $user->gender = $request->gender;
+        $user->role = $request->role;
+        $user->save();
+        return "Registration success";
+    }
 }
