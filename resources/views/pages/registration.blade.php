@@ -79,7 +79,7 @@
                 </div>
                 <div class="form-group p-1">
                     <span>
-                        Already have an account? <span href="{{route('login')}}">Sign in</span>
+                        Already have an account? <a href="{{route('login')}}">Sign in</a>
                     </span>
                 </div>
             </form> 

@@ -18,7 +18,6 @@ class APIAuth
     public function handle(Request $request, Closure $next)
     {
         $token = $request->header("Authorization");
-        $token = json_decode($token);
         $check_token = Token::where('token', $token)->where('expired_at',NULL)->first();
         if ($check_token) {
             return $next($request);

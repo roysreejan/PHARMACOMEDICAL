@@ -23,9 +23,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/login', [LoginAPIController::class, 'login']);
 Route::post('/logout', [LoginAPIController::class, 'logout']);
 Route::post('/registration', [LoginAPIController::class, 'registration']);
+Route::post('/otp', [LoginAPIController::class, 'otp']);
 
 //----------------------------Doctors----------------------------//
-Route::get('/homeDoctor', [DoctorsAPIController::class, 'homeDoctor']);
-Route::get('/doctorProfile', [DoctorsAPIController::class, 'doctorProfile']);
-Route::post('/doctorFee', [DoctorsAPIController::class, 'doctorFee']);
-Route::get('/prescriptionsList', [DoctorsAPIController::class, 'prescriptionsList']);
+Route::get('/homeDoctor', [DoctorsAPIController::class, 'homeDoctor'])->middleware('APIAuth');
+Route::get('/doctorProfile', [DoctorsAPIController::class, 'doctorProfile'])->middleware('APIAuth');;
+Route::post('/doctorFee', [DoctorsAPIController::class, 'doctorFee'])->middleware('APIAuth');;
+Route::get('/prescriptionsList', [DoctorsAPIController::class, 'prescriptionsList'])->middleware('APIAuth');;

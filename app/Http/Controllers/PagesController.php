@@ -12,6 +12,11 @@ use Exception;
 use Socialite;
 use Validator;
 use DB;
+use App\Models\Otps;
+use DateTime;
+use App\Mail\MyMail;
+use Mail;
+use Carbon\Carbon;
 
 
 class PagesController extends Controller
@@ -140,6 +145,22 @@ class PagesController extends Controller
     }
 
     public function registrationSubmit(Request $request){
+        // $otp = random_int(1000, 9000);
+        // $data = new Otps();
+        // $data->otp = $otp;
+        // $data->email = $request->email;
+        // $data->created_at = new DateTime();
+        // // $data->expired_at = new DateTime();
+
+        // $data->save();
+
+        // $emailAddress = $request->email;
+        // $details = [
+        //     'tittle' => 'Email Verification',
+        //     'OTP' => $otp,
+        // ];
+
+        // Mail::to($emailAddress)->send(new MyMail($details));
         $validate = $request->validate([
             'name' => 'required| min:3',
             'email' => 'required',
