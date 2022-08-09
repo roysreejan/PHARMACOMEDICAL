@@ -76,8 +76,24 @@ class DoctorsAPIController extends Controller
         //get appointments list from appointments table
         $doctor = Token::where('token', $req->token)->first();
         if($doctor){
-            $doc =DB::table('appointments')->where('doctorID', $doctor->userID)->get();
-            return $doc;
+            // $doc =DB::table('appointments')->where('doctorID', $doctor->userID)->get();
+            $appointments = DB::table('appointments')->leftJoin('users', 'appointments.userID', '=', 'users.userID')->where('appointments.doctorID', $doctor->userID)->where('appointments.hasPaid', '=', 'true');
+            $app = $appointments->select([
+                'users.name',
+                'appointments.appID',
+            ])->get();
+            return $app;
+        }
+    }
+    public function doctorAppointmentSubmit(Request $req)
+    {
+        $doctor = Token::where('token', $req->token)->first();
+        if($doctor){
+            //insert appointment in appointment tables
+            $appointments1 = DB::table('appointments')->where('appointments.doctorID', $doctor->userID)->where('appointments.appID', $req->appID)->first();
+            $appointments1->appointmentStatus = $req->appointmentStatus;
+            $appointments1->save();
+            return $appointments1;
         }
     }
 }

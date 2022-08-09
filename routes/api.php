@@ -31,4 +31,5 @@ Route::get('/doctorProfile', [DoctorsAPIController::class, 'doctorProfile'])->mi
 Route::post('/doctorProfile', [DoctorsAPIController::class, 'doctorProfileSubmit'])->middleware('APIAuth');
 Route::post('/doctorFee', [DoctorsAPIController::class, 'doctorFee']);
 Route::get('/doctorAppointments', [DoctorsAPIController::class, 'doctorAppointments']);
+Route::post('/doctorAppointments', [DoctorsAPIController::class, 'doctorAppointmentSubmit']);
 Route::get('/prescriptionsList', [DoctorsAPIController::class, 'prescriptionsList'])->middleware('APIAuth');
