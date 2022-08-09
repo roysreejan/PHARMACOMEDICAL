@@ -107,6 +107,7 @@ class DoctorsController extends Controller
             'doctor_fee' => 'required|numeric',
         ]);
         //insert fee in doctor table
+        // $doctor = Doctors::where('userID', Session::get('ID'))->update(['fee' => $request->doctor_fee]);
         $doctor = new Doctors();
         $doctor->userID = Session::get('ID');
         $doctor->fee = $request->doctor_fee;

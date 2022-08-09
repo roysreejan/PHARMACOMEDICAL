@@ -59,7 +59,6 @@ class LoginAPIController extends Controller
         $data->otp = $otp;
         $data->email = $request->email;
         $data->created_at = new DateTime();
-
         $data->save();
 
         $emailAddress = $request->email;
@@ -96,7 +95,7 @@ class LoginAPIController extends Controller
         $data = Otps::where('otp', $otp)->where('expired_at', NULL)->first();
         if($data){
             Users::where('email', $data->email)->update(['verified' => 'true']);
-            Otp::where('otp', $data->otp)->update(['expired_at' => true]);
+            Otps::where('otp', $data->otp)->update(['expired_at' => true]);
             return $data;
         }
         return "Otp Invalid";

@@ -27,6 +27,8 @@ Route::post('/otp', [LoginAPIController::class, 'otp']);
 
 //----------------------------Doctors----------------------------//
 Route::get('/homeDoctor', [DoctorsAPIController::class, 'homeDoctor'])->middleware('APIAuth');
-Route::get('/doctorProfile', [DoctorsAPIController::class, 'doctorProfile'])->middleware('APIAuth');;
-Route::post('/doctorFee', [DoctorsAPIController::class, 'doctorFee'])->middleware('APIAuth');;
-Route::get('/prescriptionsList', [DoctorsAPIController::class, 'prescriptionsList'])->middleware('APIAuth');;
+Route::get('/doctorProfile', [DoctorsAPIController::class, 'doctorProfile'])->middleware('APIAuth');
+Route::post('/doctorProfile', [DoctorsAPIController::class, 'doctorProfileSubmit'])->middleware('APIAuth');
+Route::post('/doctorFee', [DoctorsAPIController::class, 'doctorFee']);
+Route::get('/doctorAppointments', [DoctorsAPIController::class, 'doctorAppointments']);
+Route::get('/prescriptionsList', [DoctorsAPIController::class, 'prescriptionsList'])->middleware('APIAuth');

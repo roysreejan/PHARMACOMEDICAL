@@ -38,17 +38,46 @@ class DoctorsAPIController extends Controller
             return $doc;
         }
     }
+    public function doctorProfileSubmit(Request $req){
+        //update doctor profile
+        $doctor = Token::where('token', $req->token)->first();
+        if($doctor){
+            $doc = Users::where('userID', $doctor->userID)->first();
+            $doc->name = $req->name;
+            $doc->email = $req->email;
+            $doc->phoneNumber = $req->phoneNumber;
+            $doc->password = $req->password;
+            $doc->dob = $req->dob;
+            $doc->gender = $req->gender;
+            $doc->save();
+        }
+    }
 
     public function doctorFee(Request $req){
         //insert fee indoctor table
-        $doctor = new Doctors();
-        $doctor->userID = $req->userID;
-        $doctor->fee = $req->fee;
-        $doctor->save();
+        // $doctor = new Doctors();
+        //get current login user token with userID
+        // $doctor->userID = token::where('token', $req->token)->first()->userID;
+        $doctor = Token::where('token', $req->token)->first();
+        if($doctor){
+            $doc = Doctors::where('userID', '2')->first();
+            $doc->fee = '4000';
+            $doc->save();
+        }
+        // $doctor->fee = $req->doctor_fee;
+        // $doctor->save();
     }
     public function prescriptionsList(Request $req){
         //get prescriptions list from prescriptions table
         return Prescriptions::all();
         
+    }
+    public function doctorAppointments(Request $req){
+        //get appointments list from appointments table
+        $doctor = Token::where('token', $req->token)->first();
+        if($doctor){
+            $doc =DB::table('appointments')->where('doctorID', $doctor->userID)->get();
+            return $doc;
+        }
     }
 }
